@@ -1,6 +1,5 @@
 package com.oio.memberservice.jpa;
 
-import lombok.Data;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -40,4 +39,5 @@ public class MemberEntity {
 
     @Column(nullable = false, unique = true)
     private String encryptedPwd;
+
 }
