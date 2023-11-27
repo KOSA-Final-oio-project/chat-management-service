@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: member-service
+    name: chat-service
 
   h2:
     console:
@@ -24,7 +24,3 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka
-
-logging:
-  level:
-    org_modelmapper: DEBUG
