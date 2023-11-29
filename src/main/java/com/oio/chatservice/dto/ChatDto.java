@@ -12,7 +12,7 @@ public class ChatDto {
     // ENTER -> 사용자가 채팅방에 입장할 때 사용
     // COMM -> 일반 메시지
     public enum MessageType {
-        ENTER, COMM
+        ENTER, TALK
     }
 
     private MessageType messageType;

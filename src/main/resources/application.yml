@@ -4,6 +4,16 @@ server:
 spring:
   application:
     name: chat-service
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: false
+
+  freemarker:
+    cache: false
+
   kafka:
     bootstrap-servers: localhost:9092  # Kafka 서버 주소
     consumer:

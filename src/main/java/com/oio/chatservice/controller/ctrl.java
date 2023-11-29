@@ -4,11 +4,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/member-service")
+@RequestMapping("/chat-service")
 @RestController
 public class ctrl {
 
-    @GetMapping("/member")
+    @GetMapping("/chat")
     String home() {
         return "멤버입니다";
     }
