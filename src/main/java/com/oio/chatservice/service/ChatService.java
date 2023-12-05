@@ -5,6 +5,8 @@ import com.oio.chatservice.dto.ChatDto;
 import com.oio.chatservice.dto.ChatRoomDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedWriter;
@@ -65,6 +67,13 @@ public class ChatService {
 
         return chatRoomDto;
     } // createChatRoom()
+
+    @MessageMapping("/chat/message")
+    public void handleChatMessage(@Payload List<Map<String, Object>> messageList) {
+        for (Map<String, Object> messageMap : messageList) {
+            ChatDto chatMessage = objectMapper.convertValue(messageMap, ChatDto.class);
+        }
+    }
 
     /* ------------------------------------------------------------------------------------ */
 
