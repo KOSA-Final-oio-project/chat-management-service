@@ -1,14 +1,13 @@
 package com.oio.chatservice.controller;
 
 import com.oio.chatservice.dto.ChatRoomDto;
+import com.oio.chatservice.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -17,18 +16,7 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:5173")
 public class ChatRoomController {
 
-    private final com.oio.chatservice.service.ChatService chatService;
-
-    /**
-     * 채팅 리스트 화면(채팅방 목록 페이지를 반환)
-     * @param model
-     * @return 채팅방 목록 페이지 경로
-     */
-//    @GetMapping("/room")
-//    public String rooms(Model model) {
-//        log.info("rooms invoked()");
-//        return "/chat/room";
-//    }
+    private final ChatService chatService;
 
     /**
      * 모든 채팅방 목록 반환
@@ -37,7 +25,8 @@ public class ChatRoomController {
     @GetMapping("/rooms")
     @ResponseBody
     public List<ChatRoomDto> chatRoom() {
-        log.info("chatRoom invoked()");
+        log.info(">>>>>>>>>>>>>>>>> chatRoom() invoked");
+
         return chatService.findAllChatRoom();
     }
 
@@ -47,23 +36,12 @@ public class ChatRoomController {
      * @return 생성된 채팅방 정보
      */
     @PostMapping("/room/{name}")
-//    @GetMapping("/room")
     @ResponseBody
     public ChatRoomDto createChatRoom(@PathVariable String name) {
-        log.info("createChatRoom invoked()="  + name);
-        return chatService.createChatRoom(name);
-    }
+        log.info(">>>>>>>>>>>>>>>>> createChatRoom() invoked");
+        log.info("생성된 채팅방의 이름은: "  + name);
 
-    /**
-     * 채팅방 입장 화면
-     * @param model
-     * @param roomId 입장할 채팅방의 ID
-     * @return 채팅방 상세 페이지 경로
-     */
-    @GetMapping("/room/enter/{roomId}")
-    public String chatRoomDetail(Model model, @PathVariable String roomId) {
-        model.addAttribute("roomId", roomId);
-        return "/chat/roomdetail";
+        return chatService.createChatRoom(name);
     }
 
     /**
@@ -74,7 +52,15 @@ public class ChatRoomController {
     @GetMapping("/room/{roomId}")
     @ResponseBody
     public ChatRoomDto chatRoomInfo(@PathVariable String roomId) {
-        return chatService.findChatRoomById(roomId);
+        log.info(">>>>>>>>>>>>>>>>> chatRoomInfo() invoked");
+        log.info("조회된 채팅방의 roomId는: "  + roomId);
+
+        ChatRoomDto chatRoomDto = chatService.findChatRoomById(roomId);
+        log.info("조회된 채팅방 정보_chatRoomDto.getRoomId() = {}", chatRoomDto.getRoomId());
+        log.info("조회된 채팅방 정보_chatRoomDto.getName()v= {}", chatRoomDto.getName());
+
+//        return chatService.findChatRoomById(roomId);
+        return chatRoomDto;
     }
 
 } // end class

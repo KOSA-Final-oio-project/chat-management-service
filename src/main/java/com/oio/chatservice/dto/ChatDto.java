@@ -20,4 +20,8 @@ public class ChatDto {
     private String sender;
     private String message;
 
+    // 삭제 시 보이는지 안보이는지 구분
+    private boolean isVisibleToSender;  // 보낸 사람에게 보이는지 여부
+    private boolean isVisibleToReceiver; // 받는 사람에게 보이는지 여부
+
 } // end class
