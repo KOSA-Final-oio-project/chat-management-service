@@ -1,12 +1,23 @@
 package com.oio.chatservice.dto;
 
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class ChatDto {
+
+    @Builder
+    public ChatDto(MessageType messageType, String roomId, String sender, String message) {
+        this.messageType = messageType;
+        this.roomId = roomId;
+        this.sender = sender;
+        this.message = message;
+    }
 
     // 메시지 유형 구분
     // ENTER -> 사용자가 채팅방에 입장할 때 사용

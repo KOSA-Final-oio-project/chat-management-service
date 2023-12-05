@@ -2,11 +2,14 @@ package com.oio.chatservice.controller;
 
 import com.oio.chatservice.dto.ChatDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173")
@@ -22,7 +25,9 @@ public class ChatController {
      * 이후, STOMP 메시지 브로커를 통해 해당 채팅방을 구독하고 있는 클라이언트들에게 메시지를 전송하는 역할을 수행함
      */
     @MessageMapping("/chat/message")
-    public void message(ChatDto chatDto) {
+    public void message(@Payload ChatDto chatDto) {
+        log.info("Received message: {}", chatDto);
+
         if (ChatDto.MessageType.ENTER.equals(chatDto.getMessageType())) {
             chatDto.setMessage(chatDto.getSender() + "님이 입장하셨습니다 :-) ");
         } // if

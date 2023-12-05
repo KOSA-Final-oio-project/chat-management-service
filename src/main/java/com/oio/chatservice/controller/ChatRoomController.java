@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -57,7 +56,7 @@ public class ChatRoomController {
 
         ChatRoomDto chatRoomDto = chatService.findChatRoomById(roomId);
         log.info("조회된 채팅방 정보_chatRoomDto.getRoomId() = {}", chatRoomDto.getRoomId());
-        log.info("조회된 채팅방 정보_chatRoomDto.getName()v= {}", chatRoomDto.getName());
+        log.info("조회된 채팅방 정보_chatRoomDto.getName() = {}", chatRoomDto.getName());
 
 //        return chatService.findChatRoomById(roomId);
         return chatRoomDto;
