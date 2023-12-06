@@ -1,18 +1,14 @@
 package com.oio.chatservice.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oio.chatservice.dto.ChatDto;
+import com.oio.chatservice.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @Slf4j
@@ -23,6 +19,7 @@ public class ChatController {
 
     private final ObjectMapper objectMapper;
     private final SimpMessageSendingOperations template; //특정 Broker로 메세지를 전달
+    private final ChatService chatService;
 
     /*
      * 채팅 메시지를 처리하고, 해당 채팅방 구독자들에게 메시지를 전송
@@ -33,14 +30,15 @@ public class ChatController {
      */
     @MessageMapping(value = "/chat/message")
     public void message(@Payload ChatDto chatDto) {
-        log.info("Received message: {}", chatDto);
 
         if (ChatDto.MessageType.ENTER.equals(chatDto.getMessageType())) {
-            chatDto.setMessage(chatDto.getSender() + "님이 입장하셨습니다 :-) ");
+            chatDto.setMessage(" ' " + chatDto.getSender() + " '님이 입장하셨습니다.");
+            // 셍나: ' 셍나 '님이 입장하셨습니다.
         } // if
 
         template.convertAndSend("/sub/chat/room/" + chatDto.getRoomId(), chatDto);
-    } // message()
+        chatService.saveChatToText(chatDto); // 채팅 메시지를 파일에 저장
 
+    } // message()
 
 } // end class

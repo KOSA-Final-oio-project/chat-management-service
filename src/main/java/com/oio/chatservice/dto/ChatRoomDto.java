@@ -14,9 +14,10 @@ public class ChatRoomDto {
 
     private String roomId;
     private String name;
+    private String createDate;
 
     //WebSocketSession은 Spring에서 Websocket Connection이 맺어진 세션
-    private Set<WebSocketSession> sessions = new HashSet<>();
+//    private Set<WebSocketSession> sessions = new HashSet<>();
 
     /**
      * 방 생성
@@ -28,6 +29,7 @@ public class ChatRoomDto {
 
         chatRoomDto.roomId = UUID.randomUUID().toString();
         chatRoomDto.name = name;
+//        chatRoomDto.createDate = createDate;
 
         return chatRoomDto;
     } // createChatRoom()

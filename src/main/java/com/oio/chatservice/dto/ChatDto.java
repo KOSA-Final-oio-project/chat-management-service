@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,6 +23,7 @@ public class ChatDto {
     private String roomId;
     private String sender;
     private String message;
+    private Date sendDate; // 발신 시간
 
     // 삭제 시 보이는지 안보이는지 구분
     private boolean isVisibleToSender;  // 보낸 사람에게 보이는지 여부

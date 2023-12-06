@@ -13,8 +13,6 @@ import org.springframework.web.socket.config.annotation.*;
 @EnableWebSocketMessageBroker
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
-//    private final StompHandler stompHandler;
-
     /* 메시지 브로커에 관련된 설정 */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
@@ -39,17 +37,12 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
     } // registerStompEndpoints()
 
-    // STOMP에서 64KB 이상의 데이터 전송을 못하는 문제 해결
+    // STOMP에서 64KB 이상의 데이터도 전송할 수 있도록 설정!
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
         registry.setMessageSizeLimit(160 * 64 * 1024);
         registry.setSendTimeLimit(100 * 10000);
         registry.setSendBufferSizeLimit(3 * 512 * 1024);
     }
-
-//    @Override
-//    public void configureClientInboundChannel(ChannelRegistration registration) {
-//        registration.interceptors(stompHandler);
-//    }
 
 } // end class

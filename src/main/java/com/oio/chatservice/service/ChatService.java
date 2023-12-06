@@ -68,12 +68,12 @@ public class ChatService {
         return chatRoomDto;
     } // createChatRoom()
 
-    @MessageMapping("/chat/message")
-    public void handleChatMessage(@Payload List<Map<String, Object>> messageList) {
-        for (Map<String, Object> messageMap : messageList) {
-            ChatDto chatMessage = objectMapper.convertValue(messageMap, ChatDto.class);
-        }
-    }
+//    @MessageMapping("/chat/message")
+//    public void handleChatMessage(@Payload List<Map<String, Object>> messageList) {
+//        for (Map<String, Object> messageMap : messageList) {
+//            ChatDto chatMessage = objectMapper.convertValue(messageMap, ChatDto.class);
+//        }
+//    }
 
     /* ------------------------------------------------------------------------------------ */
 
@@ -82,23 +82,22 @@ public class ChatService {
      * 파일명은 채팅방 ID와 현재 날짜를 포함
      * @param chatDto 저장할 채팅 메시지 정보
      */
-    private void saveChatToText(ChatDto chatDto) {
+    public void saveChatToText(ChatDto chatDto) {
         String date = LocalDateTime.now().format(DATE_FORMATTER);
         String fileName = String.format("%s_%s.txt", chatDto.getRoomId(), date); // roomId를 파일명에 사용
 
         File directory = new File(BASE_PATH);
+        File file = new File(directory, fileName);
 
         if (!directory.exists()) {
             directory.mkdirs();
         } // if
 
-        File file = new File(directory, fileName);
-
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
             String jsonMessage = objectMapper.writeValueAsString(chatDto);
             writer.write(jsonMessage + "\n");
         } catch (IOException e) {
-            log.error("Error writing to file", e);
+            log.error("Error invoked in saveChatToText(): ", e);
         } // try-catch
 
     } // saveChatToText
