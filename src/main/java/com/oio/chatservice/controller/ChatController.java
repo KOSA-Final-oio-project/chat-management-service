@@ -10,6 +10,11 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
 
 @Slf4j
 @RestController
@@ -35,6 +40,19 @@ public class ChatController {
             chatDto.setMessage(" ' " + chatDto.getSender() + " '님이 입장하셨습니다.");
             // 셍나: ' 셍나 '님이 입장하셨습니다.
         } // if
+
+        // ISO 8601 UTC 날짜 문자열을 받아 로컬 날짜/시간으로 변환
+        LocalDateTime sendDate = LocalDateTime.ofInstant(
+                Instant.parse(chatDto.getSendDate()),
+                ZoneId.systemDefault()
+        );
+
+        // 원하는 형식으로 날짜/시간 포매팅
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedSendDate = sendDate.format(formatter);
+
+        // 변환된 날짜/시간을 chatDto에 설정
+        chatDto.setSendDate(formattedSendDate);
 
         template.convertAndSend("/sub/chat/room/" + chatDto.getRoomId(), chatDto);
         chatService.saveChatToText(chatDto); // 채팅 메시지를 파일에 저장

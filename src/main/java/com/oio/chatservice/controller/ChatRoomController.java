@@ -57,6 +57,7 @@ public class ChatRoomController {
         ChatRoomDto chatRoomDto = chatService.findChatRoomById(roomId);
         log.info("조회된 채팅방 정보_chatRoomDto.getRoomId() = {}", chatRoomDto.getRoomId());
         log.info("조회된 채팅방 정보_chatRoomDto.getName() = {}", chatRoomDto.getName());
+        log.info("조회된 채팅방 정보_chatRoomDto.getCreateDate() = {}", chatRoomDto.getCreateDate());
 
 //        return chatService.findChatRoomById(roomId);
         return chatRoomDto;

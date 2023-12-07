@@ -1,13 +1,14 @@
 package com.oio.chatservice.dto;
 
 import lombok.*;
-import org.springframework.web.socket.WebSocketSession;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 
+@Slf4j
 @Getter
 @Setter
 public class ChatRoomDto {
@@ -15,9 +16,6 @@ public class ChatRoomDto {
     private String roomId;
     private String name;
     private String createDate;
-
-    //WebSocketSession은 Spring에서 Websocket Connection이 맺어진 세션
-//    private Set<WebSocketSession> sessions = new HashSet<>();
 
     /**
      * 방 생성
@@ -29,7 +27,10 @@ public class ChatRoomDto {
 
         chatRoomDto.roomId = UUID.randomUUID().toString();
         chatRoomDto.name = name;
-//        chatRoomDto.createDate = createDate;
+        chatRoomDto.createDate
+                = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+chatRoomDto.getCreateDate());
 
         return chatRoomDto;
     } // createChatRoom()
