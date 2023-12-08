@@ -1,2 +1,0 @@
-{"messageType":"ENTER","roomId":"851e0760-ac35-4ab4-9168-85b983fd0973","sender":"시치1","message":" ' 시치1 '님이 입장하셨습니다.","sendDate":"2023-12-07 14:28:07"}
-{"messageType":"TALK","roomId":"851e0760-ac35-4ab4-9168-85b983fd0973","sender":"시치1","message":"님아 ㅎㅇ","sendDate":"2023-12-07 14:28:14"}
