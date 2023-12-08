@@ -21,11 +21,14 @@ public class ChatRoomController {
      * 모든 채팅방 목록 반환
      * @return 채팅방 목록 데이터
      */
+//    @GetMapping("/rooms/{email}")
     @GetMapping("/rooms")
     @ResponseBody
+//    public List<ChatRoomDto> chatRoom(@PathVariable String email) {
     public List<ChatRoomDto> chatRoom() {
         log.info(">>>>>>>>>>>>>>>>> chatRoom() invoked");
 
+//        return chatService.findAllChatRoom(email);
         return chatService.findAllChatRoom();
     }
 

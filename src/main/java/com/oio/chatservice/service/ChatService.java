@@ -38,8 +38,10 @@ public class ChatService {
         chatRoomsMap = new LinkedHashMap<>();
     } // init()
 
+    /* ------------------------------------------------------------------------------------ */
+
     /**
-     * 모든 채팅방을 조회
+     * 모든 채팅방을 조회 (이메일)
      * @return 모든 채팅방 목록 (최신 생성된 채팅방부터 반환)
      */
     public List<ChatRoomDto> findAllChatRoom() {
@@ -49,6 +51,13 @@ public class ChatService {
 
         return chatRoomsList;
     } // findAllChatRoom()
+//    public List<ChatRoomDto> findAllChatRoom(String email) {
+//        // 채팅방 생성 순서 = 최근순 반환
+//        List chatRoomsList = new ArrayList<>(chatRoomsMap.values());
+//        Collections.reverse(chatRoomsList);
+//
+//        return chatRoomsList;
+//    } // findAllChatRoom()
 
     /**
      * 주어진 채팅방 ID에 해당하는 채팅방을 찾음
@@ -82,7 +91,7 @@ public class ChatService {
         String date = LocalDateTime.now().format(DATE_FORMATTER); // 채팅 내역 저장되는 날짜
 
         String fileName = String.format("%s_%s_%s.txt", chatDto.getRoomId(), chatDto.getSender(), date); // roomId를 파일명에 사용
-        String senderFolder = BASE_PATH + "/" + chatDto.getSender(); // 발신자 이름으로 폴더 경로 생성
+        String senderFolder = BASE_PATH + "/" + "unmergedChat" + "/" + chatDto.getSender(); // 발신자 이름으로 폴더 경로 생성
         String filePath = senderFolder + "/" + fileName; // 폴더 경로와 파일 이름을 조합하여 최종 파일 경로로 해줌
 
         File directory = new File(senderFolder);
@@ -100,32 +109,23 @@ public class ChatService {
         } // try-catch
 
     } // saveChatToText
-    /*
 
-    // 폴더 경로와 파일 이름을 조합하여 최종 파일 경로 생성
-    String filePath = senderFolder + "/" + chatDto.getRoomId() + "_" + date + ".txt";
+    // 1. 두 파일의 채팅 내용을 읽고 ChatDto 객체로 변환.
+    // 2. 모든 ChatDto 객체를 시간 순으로 정렬.
+    // 3. 정렬된 채팅 내용을 하나의 파일에 저장.
+    // 4. 새로운 내용이 추가될 경우, 기존 파일에 이어서 저장.
+    
 
-    File directory = new File(senderFolder);
-    File file = new File(filePath);
 
-    if (!directory.exists()) {
-        directory.mkdirs(); // 발신자 폴더가 없으면 생성
-    }
 
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
-        String jsonMessage = objectMapper.writeValueAsString(chatDto);
-        writer.write(jsonMessage + "\n");
-    } catch (IOException e) {
-        log.error("Error invoked in saveChatToText(): ", e);
-    }
-}
-     */
+} // end class
 
     /**
      * 채팅방 ID에 따른 채팅 내역을 읽어오는 메소드
      * @param roomId
-     * @return
+     * @return chatHistory = ChatDto 리스트
      */
+    /*
     public List<ChatDto> readChatHistory(String roomId) { // 채팅 내역 -> roomId로 읽어옴
         // 채팅 내역을 저장할 ChatDto 객체 리스트 만들어주기
         List<ChatDto> chatHistory = new ArrayList<>();
@@ -167,5 +167,4 @@ public class ChatService {
         // ChatDto 리스트를 반환
         return chatHistory;
     }
-
-} // end class
+    */
