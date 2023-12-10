@@ -124,7 +124,7 @@ public class ChatService {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             writer.write(objectMapper.writeValueAsString(chatDto) + "\n");
         } catch (IOException e) {
-            log.error("Error occurred in saveChatToText(): ", e);
+            log.error("Error occurred in saveChatToText() while writing chat file: ", e);
         } // try-catch
 
         // 각 채팅 파일 하나로 합치기
@@ -157,52 +157,63 @@ public class ChatService {
         Set<String> senderSet = new LinkedHashSet<>(); // 각 파일에서 sender 뽑아서 저장
         List<ChatDto> allMessageList = new ArrayList<>(); // 각 파일에서 message 뽑아서 저장
 
+        // #1. 파일 탐색 및 필터링 시작!
+        // 1-1. UNMERGED_CHAT_PATH 경로에서 시작하여 모든 파일과 디렉토리를 순회해줌
         try (Stream<Path> files = Files.walk(Paths.get(UNMERGED_CHAT_PATH))) {
             files
-                    .filter(Files::isRegularFile)
-                    .filter(path -> path.getFileName().toString().startsWith(roomId))
+                    .filter(Files::isRegularFile) // 1-2. 디렉토리 순회 중 디렉토리를 제외한 파일만 필터링
+                    .filter(path -> path.getFileName().toString().startsWith(roomId)) // 1-3. 파일 이름이 주어진 roomId로 시작하는 파일만 필터링
+                    // #2. 각 파일의 채팅 메시지 처리
                     .forEach(path -> {
-                        try (Stream<String> lines = Files.lines(path)) {
-                            lines.map(line -> {
+                        try (Stream<String> lines = Files.lines(path)) { // 2-1. 파일의 각 줄을 읽어 스트림으로 반환함, 이때 각 줄은 채팅 메시지의 JSON!!
+                            lines.map(line -> { // 2-2. 각 라인을 JSON -> ChatDto 변환
                                         try {
                                             return objectMapper.readValue(line, ChatDto.class);
                                         } catch (IOException e) {
-                                            log.error("Error occurred in parsing chat message: ", e);
+                                            log.error("Error occurred in mergeChatFilesByRoomId() while parsing chat message: ", e);
                                             return null;
                                         } // inner-try-catch
                                     })
-                                    .filter(Objects::nonNull)
-                                    .forEach(chatDto -> {
+                                    .filter(Objects::nonNull) // 2-3. null 값이 아닌 객체만 필터링
+                                    .forEach(chatDto -> { // 2-4. 각 ChatDto 객체 순회하면서 작업 수행함
+                                        // 2-5. senderSet에 고유 sender를 추가 (최대 2명의 sender만 저장됨. 1:1이라..이렇게 했는데 의미 없는거 같기도 하고...)
                                         if (senderSet.size() < 2 && !senderSet.contains(chatDto.getSender())) {
                                             senderSet.add(chatDto.getSender());
                                         } // if
-                                        allMessageList.add(chatDto);
-                                    });
+                                        allMessageList.add(chatDto); // 2-6. 모든 메시지를 allMessageList에 추가
+                                    }); // forEach
                         } catch (IOException e) {
-                            log.error("Error occurred in reading chat file: ", e);
+                            log.error("Error occurred in mergeChatFilesByRoomId() while reading chat file: ", e);
                         } // try-catch
                     }); // forEach
         } // try
 
-        // sendDate로 정렬해줌
+        // sendDate로 오래된순 -> 최신순으로 정렬해줌
         allMessageList.sort(Comparator.comparing(ChatDto::getSendDate));
 
+        // 발신자 추출 (최초 sender 2명 -> 리스트에 담아줌)
         List<String> senderList = allMessageList.stream()
-                .map(ChatDto::getSender)
-                .distinct()
-                .limit(2)
-                .collect(Collectors.toList());
+                .map(ChatDto::getSender) // ChatDto 객체에서 각 sender 값을 추출
+                .distinct() // 스트림에서 중복된 요소를 제거 (동일 sender 여러개여도 하나만 유지)
+                .limit(2) // 스트림의 요소 수를 제한(= 처음 sender 2명만 유지됨)
+                .collect(Collectors.toList()); // 스트림의 요소를 원하는 컬렉션(= 리스트)으로 변환 -> sender 2명이 리스트로 변환됨
 
         // sender 2명이어야지 .txt 파일 생성될 수 있도록 조건 추가
         if (senderList.size() == 2) {
 
+            // 더 빨리 메시지 보낸 사람 = sender1 => 대화 거는 사람이 sender1
+            // 상품 주인이 sender2가 됨
+            // 나중에 messageType ENTER 걸러주기
             String sender1 = senderList.get(0);
             String sender2 = senderList.get(1);
 
+            // 파일 합본의 이름 = roomId_대여하려고하는사람_대여해주는사람.txt
             String mergedFilePath = MERGED_CHAT_PATH + "/" + roomId + "_" + sender1 + "_" + sender2 + ".txt";
 
+            // 파일 작성
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(mergedFilePath))) {
                 for (ChatDto message : allMessageList) {
+                    // 정렬된 모든 메시지를 JSON 형식으로 다시 변환해서 텍스트 파일로 저장
                     writer.write(objectMapper.writeValueAsString(message) + "\n");
                 } // for
             } // try
