@@ -1,5 +1,6 @@
 package com.oio.chatservice.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oio.chatservice.dto.ChatDto;
 import com.oio.chatservice.dto.ChatRoomDto;
@@ -51,6 +52,8 @@ public class ChatService {
 
         return chatRoomsList;
     } // findAllChatRoom()
+
+    // 로그인 이후 헤더에서 email값 가져와서 해당 email에 맞는 방만 조회할 수 있게
 //    public List<ChatRoomDto> findAllChatRoom(String email) {
 //        // 채팅방 생성 순서 = 최근순 반환
 //        List chatRoomsList = new ArrayList<>(chatRoomsMap.values());
@@ -87,7 +90,7 @@ public class ChatService {
      * 파일명은 채팅방 ID와 현재 날짜를 포함
      * @param chatDto 저장할 채팅 메시지 정보
      */
-    public void saveChatToText(ChatDto chatDto) {
+    public void saveChatToText(ChatDto chatDto) throws IOException {
         String date = LocalDateTime.now().format(DATE_FORMATTER); // 채팅 내역 저장되는 날짜
 
         String fileName = String.format("%s_%s_%s.txt", chatDto.getRoomId(), chatDto.getSender(), date); // roomId를 파일명에 사용
@@ -101,70 +104,71 @@ public class ChatService {
             directory.mkdirs(); // 발신자 폴더가 없으면 생성
         } // if
 
+        // 새 메시지를 파일에 저장
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
             String jsonMessage = objectMapper.writeValueAsString(chatDto);
             writer.write(jsonMessage + "\n");
         } catch (IOException e) {
-            log.error("Error invoked in saveChatToText(): ", e);
+            log.error("Error occurred in saveChatToText(): ", e);
         } // try-catch
 
-    } // saveChatToText
+        mergeChatFilesByRoomId(chatDto.getRoomId());
 
-    // 1. 두 파일의 채팅 내용을 읽고 ChatDto 객체로 변환.
-    // 2. 모든 ChatDto 객체를 시간 순으로 정렬.
-    // 3. 정렬된 채팅 내용을 하나의 파일에 저장.
-    // 4. 새로운 내용이 추가될 경우, 기존 파일에 이어서 저장.
-    
+    }
 
+    public void mergeChatFilesByRoomId(String roomId) throws IOException {
+        String unmergedFolderPath = BASE_PATH + "/unmergedChat";
+        String mergedFolderPath = BASE_PATH + "/mergedChat";
 
+        File mergedFolder = new File(mergedFolderPath);
+        if (!mergedFolder.exists()) {
+            mergedFolder.mkdirs();
+        }
+
+        String mergedFilePath = mergedFolderPath + "/" + roomId + "_merged.txt";
+        File mergedFile = new File(mergedFilePath);
+
+        Set<String> senders = new LinkedHashSet<>();
+        List<ChatDto> allMessages = new ArrayList<>();
+
+        try (Stream<Path> files = Files.walk(Paths.get(unmergedFolderPath))) {
+            files
+                    .filter(Files::isRegularFile)
+                    .filter(path -> path.getFileName().toString().startsWith(roomId))
+                    .forEach(path -> {
+                        try (Stream<String> lines = Files.lines(path)) {
+                            lines.map(line -> {
+                                        try {
+                                            return objectMapper.readValue(line, ChatDto.class);
+                                        } catch (IOException e) {
+                                            log.error("Error parsing chat message: ", e);
+                                            return null;
+                                        }
+                                    })
+                                    .filter(Objects::nonNull)
+                                    .forEach(chatDto -> {
+                                        if (senders.size() < 2 && !senders.contains(chatDto.getSender())) {
+                                            senders.add(chatDto.getSender());
+                                        }
+                                        allMessages.add(chatDto);
+                                    });
+                        } catch (IOException e) {
+                            log.error("Error reading chat file: ", e);
+                        }
+                    });
+        }
+
+        allMessages.sort(Comparator.comparing(ChatDto::getSendDate));
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(mergedFile))) {
+            for (ChatDto message : allMessages) {
+                writer.write(objectMapper.writeValueAsString(message) + "\n");
+            }
+        }
+
+        // Senders are now the first two unique senders in sendDate order
+        System.out.println("Unique Senders: " + senders);
+    }
 
 } // end class
-
-    /**
-     * 채팅방 ID에 따른 채팅 내역을 읽어오는 메소드
-     * @param roomId
-     * @return chatHistory = ChatDto 리스트
-     */
-    /*
-    public List<ChatDto> readChatHistory(String roomId) { // 채팅 내역 -> roomId로 읽어옴
-        // 채팅 내역을 저장할 ChatDto 객체 리스트 만들어주기
-        List<ChatDto> chatHistory = new ArrayList<>();
-
-        // Files.walk(Paths.get(BASE_PATH))
-        // ->  BASE_PATH 경로 및 하위 경로에 있는 모든 파일&디렉토리의 경로를 스트림으로 생성해줌!
-        try (Stream<Path> paths = Files.walk(Paths.get(BASE_PATH))) {
-
-            // 필터링 및 파일 경로 수집
-            List<String> fileNames = paths
-                    .filter(Files::isRegularFile) // 디렉토리가 아닌 파일만 필터링
-                    .map(Path::toString) // 경로(Path)를 문자열로 변환
-                    .filter(path -> path.contains(roomId)) // 파일 경로에 roomId가 포함된 것만 필터링
-                    .collect(Collectors.toList()); // 필터링된 경로를 리스트로 수집
-
-            // 채팅 내역 읽기 및 파싱
-            for (String fileName : fileNames) { // 수집된 파일명 리스트 돌리기!
-
-                // 각 파일 읽어서 내용을 문자열 리스트로 변환해줌
-                List<String> lines = Files.readAllLines(Paths.get(fileName));
-
-                // 파일의 라인 돌리기
-                for (String line : lines) {
-                    // JSON -> Dto
-                    ChatDto chatDto = objectMapper.readValue(line, ChatDto.class);
-
-                    // roomId 동일한 것만 추가
-                    if (chatDto.getRoomId().equals(roomId)) {
-                        chatHistory.add(chatDto);
-                    } // if
-
-                } // inner-for
-
-            } // outer-for
-        } catch (IOException e) {
-            e.printStackTrace();
-        } // try-catch
-
-        // ChatDto 리스트를 반환
-        return chatHistory;
-    }
-    */

@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -22,7 +23,6 @@ import java.time.format.DateTimeFormatter;
 @CrossOrigin(origins = "http://localhost:5173")
 public class ChatController {
 
-    private final ObjectMapper objectMapper;
     private final SimpMessageSendingOperations template; //특정 Broker로 메세지를 전달
     private final ChatService chatService;
 
@@ -34,7 +34,7 @@ public class ChatController {
      * 이후, STOMP 메시지 브로커를 통해 해당 채팅방을 구독하고 있는 클라이언트들에게 메시지를 전송하는 역할을 수행함
      */
     @MessageMapping(value = "/chat/message")
-    public void message(@Payload ChatDto chatDto) {
+    public void message(@Payload ChatDto chatDto) throws IOException {
 
         if (ChatDto.MessageType.ENTER.equals(chatDto.getMessageType())) {
             chatDto.setMessage(" ' " + chatDto.getSender() + " '님이 입장하셨습니다.");
@@ -55,6 +55,7 @@ public class ChatController {
         chatDto.setSendDate(formattedSendDate);
 
         template.convertAndSend("/sub/chat/room/" + chatDto.getRoomId(), chatDto);
+
         chatService.saveChatToText(chatDto); // 채팅 메시지를 파일에 저장
 
     } // message()

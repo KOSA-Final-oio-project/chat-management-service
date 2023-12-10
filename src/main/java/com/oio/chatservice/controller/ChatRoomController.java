@@ -30,7 +30,7 @@ public class ChatRoomController {
 
 //        return chatService.findAllChatRoom(email);
         return chatService.findAllChatRoom();
-    }
+    } // chatRoom()
 
     /**
      * 채팅방 생성
@@ -44,7 +44,7 @@ public class ChatRoomController {
         log.info("생성된 채팅방의 이름은: "  + name);
 
         return chatService.createChatRoom(name);
-    }
+    } // createChatRoom()
 
     /**
      * 특정 채팅방 조회
@@ -64,6 +64,6 @@ public class ChatRoomController {
 
 //        return chatService.findChatRoomById(roomId);
         return chatRoomDto;
-    }
+    } // chatRoomInfo()
 
 } // end class
