@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -21,15 +22,24 @@ public class ChatRoomController {
      * 모든 채팅방 목록 반환
      * @return 채팅방 목록 데이터
      */
-//    @GetMapping("/rooms/{email}")
     @GetMapping("/rooms")
     @ResponseBody
-//    public List<ChatRoomDto> chatRoom(@PathVariable String email) {
     public List<ChatRoomDto> chatRoom() {
         log.info(">>>>>>>>>>>>>>>>> chatRoom() invoked");
 
-//        return chatService.findAllChatRoom(email);
         return chatService.findAllChatRoom();
+    } // chatRoom()
+
+    /**
+     * email에 해당하는 채팅방 목록 반환
+     * @return 채팅방 목록 데이터
+     */
+    @GetMapping("/rooms/{email}")
+    @ResponseBody
+    public List<ChatRoomDto> chatRoomByEmail(@PathVariable String email) throws IOException {
+        log.info(">>>>>>>>>>>>>>>>> chatRoomByEmail() invoked");
+
+        return chatService.findChatRoomByEmail(email);
     } // chatRoom()
 
     /**
@@ -55,14 +65,9 @@ public class ChatRoomController {
     @ResponseBody
     public ChatRoomDto chatRoomInfo(@PathVariable String roomId) {
         log.info(">>>>>>>>>>>>>>>>> chatRoomInfo() invoked");
-        log.info("조회된 채팅방의 roomId는: "  + roomId);
 
         ChatRoomDto chatRoomDto = chatService.findChatRoomById(roomId);
-        log.info("조회된 채팅방 정보_chatRoomDto.getRoomId() = {}", chatRoomDto.getRoomId());
-        log.info("조회된 채팅방 정보_chatRoomDto.getName() = {}", chatRoomDto.getName());
-        log.info("조회된 채팅방 정보_chatRoomDto.getCreateDate() = {}", chatRoomDto.getCreateDate());
 
-//        return chatService.findChatRoomById(roomId);
         return chatRoomDto;
     } // chatRoomInfo()
 

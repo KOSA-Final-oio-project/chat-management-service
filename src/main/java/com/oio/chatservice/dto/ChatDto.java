@@ -16,8 +16,9 @@ public class ChatDto {
     // ENTER -> 사용자가 채팅방에 입장할 때 사용
     // TALK -> 일반 메시지
     // ALERT -> 거래하기 버튼 클릭 이후 알려주기
+    // QUIT -> 웹소켓 연결이 끊어졌을 때 => 읽음표시 확인용으로 사용하기
     public enum MessageType {
-        ENTER, TALK, ALERT
+        ENTER, TALK, ALERT, QUIT
     }
 
     private MessageType messageType;
@@ -32,8 +33,11 @@ public class ChatDto {
         this.sendDate = sendDate;
     }
 
-    // 삭제 시 보이는지 안보이는지 구분
-//    private boolean isVisibleToSender;  // 보낸 사람에게 보이는지 여부
-//    private boolean isVisibleToReceiver; // 받는 사람에게 보이는지 여부
+    // 새로운 채팅 왔을 경우 (웹소켓 끊긴 경우 QUIT 메시지 반환 -> 이후의 메시지는 다 isRead false 처리)
+    private boolean isRead;
+
+    // 채팅 삭제했을 경우 안보이게 처리
+    private boolean isVisibleToSender1; // 빌리는 사람
+    private boolean isVisibleToSender2; // 빌려주는 사람
 
 } // end class

@@ -16,6 +16,7 @@ public class ChatRoomDto {
     private String roomId;
     private String name;
     private String createDate;
+    private String email;
 
     /**
      * 방 생성
@@ -30,7 +31,7 @@ public class ChatRoomDto {
         chatRoomDto.createDate
                 = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+chatRoomDto.getCreateDate());
+        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> createChatRoom() invoked. " + chatRoomDto.getCreateDate());
 
         return chatRoomDto;
     } // createChatRoom()

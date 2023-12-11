@@ -2,17 +2,15 @@ server:
   port: 0
 
 spring:
-#  jwt:
-#    secret: govlepel@$&
 
   application:
     name: chat-service
 
-  devtools:
-    livereload:
-      enabled: true
-    restart:
-      enabled: false
+#  devtools:
+#    livereload:
+#      enabled: true
+#    restart:
+#      enabled: false
 
   freemarker:
     cache: false

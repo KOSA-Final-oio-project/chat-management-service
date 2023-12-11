@@ -1,16 +1,12 @@
-//package com.oio.chatservice.dto;
-//
-//import lombok.Builder;
-//import lombok.Getter;
-//
-//@Getter
-//public class LoginDto {
-//    private String name;
-//    private String token;
-//
-//    @Builder
-//    public LoginDto(String name, String token) {
-//        this.name = name;
-//        this.token = token;
-//    }
-//}
+package com.oio.chatservice.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class MemberDto {
+
+    private String email;
+
+} // end class
