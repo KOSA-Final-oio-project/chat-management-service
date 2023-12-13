@@ -9,6 +9,7 @@ import java.util.UUID;
 
 
 @Slf4j
+@ToString
 @Getter
 @Setter
 public class ChatRoomDto {

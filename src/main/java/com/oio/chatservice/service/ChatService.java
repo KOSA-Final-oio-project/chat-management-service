@@ -88,6 +88,7 @@ public class ChatService {
             } //  for
         } // try
 
+        log.info("filterdRoomList: {}", filterdRoomList);
         return filterdRoomList; // 필터링된 채팅방 목록 반환
 
     } // findChatRoomByEmail()
@@ -113,6 +114,39 @@ public class ChatService {
         return chatRoomDto;
     } // createChatRoom()
 
+    /**
+     * roomId로 채팅 내역 찾기
+     * @param roomId 채팅방 아이디
+     * @return 채팅방 아이디에 맞는 채팅 내역
+     * @throws IOException
+     */
+    public List<ChatDto> findChatRoomLogs(String roomId) throws IOException {
+        List<ChatDto> chatLogs = new ArrayList<>();
+
+        File folder = new File(MERGED_CHAT_PATH);
+
+        File[] listOfFiles = folder.listFiles();
+
+        // 해당 roomId를 포함하는 파일 찾기
+        for (File file : listOfFiles) {
+            if (file.isFile() && file.getName().startsWith(roomId)) {
+                try (Stream<String> lines = Files.lines(file.toPath())) {
+                    lines.forEach(line -> {
+                        try {
+                            ChatDto chatLog = objectMapper.readValue(line, ChatDto.class);
+                            chatLogs.add(chatLog);
+                        } catch (IOException e) {
+                            log.error("Error parsing chat log: ", e);
+                        } // try-catch
+                    }); // forEach
+                } // try
+                break; // roomId에 해당하는 파일을 찾으면 반복 중지
+            } // if
+        } // for
+
+        return chatLogs;
+    } // findChatRoomLogs()
+
     /* ------------------------------------------------------------------------------------ */
 
     /**
@@ -127,7 +161,6 @@ public class ChatService {
 //    private String buildChatFileName(String roomId, String sender, String date) {
 //        return String.format("%s_%s_%s.txt", roomId, sender, date);
 //    } // buildChatFileName() -> 이렇게 하면 1분 단위로 날짜 바꼈을 경우 새로운 파일로 생성됨 ㅠ...
-
 
     /**
      * 채팅 메시지 정보를 파일에 저장

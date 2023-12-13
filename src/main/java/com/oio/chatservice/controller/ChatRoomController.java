@@ -1,9 +1,11 @@
 package com.oio.chatservice.controller;
 
+import com.oio.chatservice.dto.ChatDto;
 import com.oio.chatservice.dto.ChatRoomDto;
 import com.oio.chatservice.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -68,7 +70,22 @@ public class ChatRoomController {
 
         ChatRoomDto chatRoomDto = chatService.findChatRoomById(roomId);
 
-        return chatRoomDto;
+        return chatService.findChatRoomById(roomId);
     } // chatRoomInfo()
+
+    /**
+     * 채팅방 입장
+     * @param roomId 입장할 채팅방의 ID
+     * @return 해당 채팅방의 정보
+     */
+    @GetMapping("/room/enter/{roomId}")
+    @ResponseBody
+    public List<ChatDto> enterChatRoom(@PathVariable String roomId) throws IOException {
+        log.info(">>>>>>>>>>>>>>>>> enterChatRoom() invoked");
+
+        log.info("chatService.findChatRoomLogs(roomId): {}", chatService.findChatRoomLogs(roomId));
+        return chatService.findChatRoomLogs(roomId);
+
+    } // enterChatRoom()
 
 } // end class
