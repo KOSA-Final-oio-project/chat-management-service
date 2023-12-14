@@ -4,13 +4,14 @@ package com.oio.chatservice.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Date;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class ChatDto {
+
 
     // 메시지 유형 구분
     // ENTER -> 사용자가 채팅방에 입장할 때 사용
@@ -28,16 +29,22 @@ public class ChatDto {
     private String sendDate; // 메시지 발신 시간
     // 년월일 + 시분초 -> 클라이언트 측에서 시분초만 보여주기
 
-    // 클라이언트측의 시간 ChatDto에 설정하기
-    public void setSendDate(String sendDate) {
-        this.sendDate = sendDate;
-    }
+    // ChatRoomDto에서 받아올 용도
+    private String name;
+    private String createDate;
 
     // 새로운 채팅 왔을 경우 (웹소켓 끊긴 경우 QUIT 메시지 반환 -> 이후의 메시지는 다 isRead false 처리)
-    private boolean isRead;
+    private int readCnt;
 
     // 채팅 삭제했을 경우 안보이게 처리
     private boolean isVisibleToSender1; // 빌리는 사람
     private boolean isVisibleToSender2; // 빌려주는 사람
+
+    /* =============================== */
+
+    // 클라이언트측의 시간 ChatDto에 설정하기
+    public void setSendDate(String sendDate) {
+        this.sendDate = sendDate;
+    }
 
 } // end class

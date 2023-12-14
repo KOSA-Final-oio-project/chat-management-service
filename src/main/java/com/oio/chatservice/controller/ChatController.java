@@ -1,6 +1,5 @@
 package com.oio.chatservice.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oio.chatservice.dto.ChatDto;
 import com.oio.chatservice.service.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +61,7 @@ public class ChatController {
         // chatDto 페이로드를 특정 채팅방 토픽으로 전송 -> 해당 토픽에 구독한 모든 클라이언트(즉, 그 채팅방에 현재 있는 사용자들)는 이 메시지를 받음
         template.convertAndSend("/sub/chat/room/" + chatDto.getRoomId(), chatDto);
 
-        chatService.saveChatToText(chatDto); // 채팅 메시지를 파일에 저장
+//        chatService.saveChatToText(chatDto); // 채팅 메시지를 파일에 저장
 
     } // message()
 
