@@ -35,35 +35,37 @@ public class ChatController {
      */
     @MessageMapping(value = "/chat/message")
     public void message(@Payload ChatDto chatDto) throws IOException {
+        log.info("chatDto: {}", chatDto);
 
-        // 입장 처리
+        // 입장 및 퇴장 메시지 처리
         if (ChatDto.MessageType.ENTER.equals(chatDto.getMessageType())) {
             chatDto.setMessage(" ' " + chatDto.getSender() + " '님이 입장하셨습니다.");
-            // 셍나: ' 셍나 '님이 입장하셨습니다.
+            chatService.saveChatToText(chatDto); // 채팅 메시지를 파일에 저장
         } else if (ChatDto.MessageType.QUIT.equals(chatDto.getMessageType())) {
             chatDto.setMessage(" ' " + chatDto.getSender() + " '님이 퇴장하셨습니다.");
-            // 셍나: ' 셍나 '님이 퇴장하셨습니다.
-        } // if
+            chatService.saveChatToText(chatDto); // 채팅 메시지를 파일에 저장
+        } else if (ChatDto.MessageType.TALK.equals(chatDto.getMessageType())) {
+            // TALK 메시지의 경우, 추가적인 처리 없이 바로 저장
+            chatService.saveChatToText(chatDto); // 채팅 메시지를 파일에 저장
+        }
 
-        // ISO 8601 UTC 날짜 문자열을 받아 로컬 날짜/시간으로 변환
-        LocalDateTime sendDate = LocalDateTime.ofInstant(
-                Instant.parse(chatDto.getSendDate()),
-                ZoneId.systemDefault()
-        );
+        // 날짜 처리
+        LocalDateTime sendDate;
+        try {
+            sendDate = LocalDateTime.ofInstant(
+                    Instant.parse(chatDto.getSendDate()),
+                    ZoneId.systemDefault()
+            );
+        } catch (Exception e) {
+            sendDate = LocalDateTime.now();
+        }
 
-        // 원하는 형식으로 날짜/시간 포매팅
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedSendDate = sendDate.format(formatter);
+        chatDto.setSendDate(sendDate.format(formatter));
 
-        // 변환된 날짜/시간을 chatDto에 설정
-        chatDto.setSendDate(formattedSendDate);
-
-        // chatDto 페이로드를 특정 채팅방 토픽으로 전송 -> 해당 토픽에 구독한 모든 클라이언트(즉, 그 채팅방에 현재 있는 사용자들)는 이 메시지를 받음
+        // 메시지 전송
         template.convertAndSend("/sub/chat/room/" + chatDto.getRoomId(), chatDto);
-
-//        chatService.saveChatToText(chatDto); // 채팅 메시지를 파일에 저장
-
-    } // message()
+    }
 
 } // end class
 

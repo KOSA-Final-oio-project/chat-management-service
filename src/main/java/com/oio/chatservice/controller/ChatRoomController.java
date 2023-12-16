@@ -21,6 +21,45 @@ public class ChatRoomController {
 
     private final ChatService chatService;
 
+    /* ------------------------------------------------------------------------------------ */
+
+    /**
+     * 채팅방 생성
+     * @param roomName
+     * @param createDate
+     * @param productName
+     * @param productPrice
+     * @param receiver
+     * @param sender
+     * @return 생성된 채팅방 정보
+     */
+    @PostMapping("/room/{roomName}/{createDate}/{productName}/{productPrice}/{receiver}/{sender}")
+    @ResponseBody
+    public ChatRoomDto createChatRoom(
+            @PathVariable String roomName,
+            @PathVariable String createDate,
+            @PathVariable String productName,
+            @PathVariable String productPrice,
+            @PathVariable String receiver,
+            @PathVariable String sender) {
+
+        // ChatRoomDto 객체 생성
+        ChatRoomDto chatRoomDto = new ChatRoomDto();
+        chatRoomDto.setRoomId(UUID.randomUUID().toString());
+        chatRoomDto.setRoomName(roomName);
+        chatRoomDto.setCreateDate(createDate); // 또는 서버 시간 사용
+        chatRoomDto.setProductName(productName);
+        chatRoomDto.setProductPrice(productPrice);
+        chatRoomDto.setReceiver(receiver);
+        chatRoomDto.setSender(sender);
+
+        log.info("생성 요청된 채팅방 정보: {}", chatRoomDto);
+        return chatService.createChatRoom(chatRoomDto);
+
+    }
+
+    /* ------------------------------------------------------------------------------------ */
+
     /**
      * 모든 채팅방 목록 반환
      * @return 채팅방 목록 데이터
@@ -33,6 +72,8 @@ public class ChatRoomController {
         return chatService.findAllChatRoom();
     } // chatRoom()
 
+    /* ------------------------------------------------------------------------------------ */
+
     /**
      * email에 해당하는 채팅방 목록 반환
      * @return 채팅방 목록 데이터
@@ -41,51 +82,13 @@ public class ChatRoomController {
     @ResponseBody
     public List<ChatRoomDto> chatRoomByEmail(@PathVariable String email) throws IOException {
         log.info(">>>>>>>>>>>>>>>>> chatRoomByEmail() invoked");
-        log.info("email" + email);
+        log.info(">>>>>>>>>>>>>>>>> 전달받은 email: " + email);
 
-//        chatService.loadChatRoomsForUser(email); // 사용자별 채팅방 목록 로드
-        chatService.loadChatRoomsForUser(); // 사용자별 채팅방 목록 로드
+        chatService.loadChatRooms(email); // 사용자별 채팅방 목록 로드
+//        chatService.loadChatRooms(); // 사용자별 채팅방 목록 로드
+
         return chatService.findChatRoomByEmail(email);
     } // chatRoom()
-
-//    /**
-//     * 채팅방 생성
-//     * @param name 생성할 채팅방의 이름
-//     * @return 생성된 채팅방 정보
-//     */
-//    @PostMapping("/room/{name}")
-//    @ResponseBody
-//    public ChatRoomDto createChatRoom(@PathVariable String name) {
-//        log.info(">>>>>>>>>>>>>>>>> createChatRoom() invoked");
-//        log.info("생성된 채팅방의 이름은: "  + name);
-//
-//        return chatService.createChatRoom(name);
-//    } // createChatRoom()
-    @PostMapping("/room/{roomName}/{createDate}/{productName}/{productPrice}/{receiver}/{email}")
-    @ResponseBody
-    public ChatRoomDto createChatRoom(
-            @PathVariable String roomName,
-            @PathVariable String createDate,
-            @PathVariable String productName,
-            @PathVariable String productPrice,
-            @PathVariable String receiver,
-            @PathVariable String email) {
-
-        // ChatRoomDto 객체 생성
-        ChatRoomDto chatRoomDto = new ChatRoomDto();
-        chatRoomDto.setRoomId(UUID.randomUUID().toString());
-        chatRoomDto.setRoomName(roomName);
-        chatRoomDto.setCreateDate(createDate); // 또는 서버 시간 사용
-        chatRoomDto.setProductName(productName);
-        chatRoomDto.setProductPrice(productPrice);
-        chatRoomDto.setReceiver(receiver);
-        chatRoomDto.setEmail(email);
-
-        log.info("생성 요청된 채팅방 정보: {}", chatRoomDto);
-        return chatService.createChatRoom(chatRoomDto);
-
-//        return chatRoomDto;
-    }
 
     /**
      * 특정 채팅방 조회
@@ -99,6 +102,8 @@ public class ChatRoomController {
 
         return chatService.findChatRoomById(roomId);
     } // chatRoomInfo()
+
+    /* ------------------------------------------------------------------------------------ */
 
     /**
      * 채팅방 입장

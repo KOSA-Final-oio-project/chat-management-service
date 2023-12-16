@@ -25,12 +25,14 @@ public class ChatDto {
     private MessageType messageType;
     private String roomId;
     private String sender;
+    private String roomName;
     private String message;
     private String sendDate; // 메시지 발신 시간
     // 년월일 + 시분초 -> 클라이언트 측에서 시분초만 보여주기
+    private String productName;
+    private String productPrice;
+    private String receiver;
 
-    // ChatRoomDto에서 받아올 용도
-    private String name;
     private String createDate;
 
     // 새로운 채팅 왔을 경우 (웹소켓 끊긴 경우 QUIT 메시지 반환 -> 이후의 메시지는 다 isRead false 처리)

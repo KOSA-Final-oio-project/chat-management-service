@@ -60,7 +60,7 @@ public class ChatRoomDto {
     private String roomId;
     private String roomName;
     private String createDate;
-    private String email;
+    private String sender;
     private String productName;
     private String productPrice;
     private String receiver;
@@ -71,10 +71,10 @@ public class ChatRoomDto {
      * @param productName 제품 이름
      * @param productPrice 제품 가격
      * @param receiver 수신자 이메일
-     * @param email 발신자 이메일
+     * @param sender 발신자 이메일
      * @return 생성된 채팅방 정보
      */
-    public static ChatRoomDto createChatRoom(String roomName, String productName, String productPrice, String receiver, String email) {
+    public static ChatRoomDto createChatRoom(String roomName, String productName, String productPrice, String receiver, String sender) {
         ChatRoomDto chatRoomDto = new ChatRoomDto();
 
         chatRoomDto.roomId = UUID.randomUUID().toString();
@@ -82,7 +82,7 @@ public class ChatRoomDto {
         chatRoomDto.productName = productName;
         chatRoomDto.productPrice = productPrice;
         chatRoomDto.receiver = receiver;
-        chatRoomDto.email = email;
+        chatRoomDto.sender = sender;
         chatRoomDto.createDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ChatRoom created: {}", chatRoomDto);
