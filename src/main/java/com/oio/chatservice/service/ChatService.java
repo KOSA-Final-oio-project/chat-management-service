@@ -17,8 +17,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -146,7 +146,6 @@ public class ChatService {
 
         // BASE_PATH에 위치한 모든 파일을 탐색
         try (Stream<Path> paths = Files.walk(Paths.get(BASE_PATH))) {
-            log.info(">>>>>>>>>>>>>>>>>>>>>> 1");
 
             // 채팅방 ID를 추출하는 로직
             List<String> roomIds = paths
@@ -161,26 +160,23 @@ public class ChatService {
                     .distinct() // 중복 제거
                     .collect(Collectors.toList()); // 결과를 리스트로 수집
 
-            log.info(">>>>>>>>>>>>>>>>>>>>>> 2");
             log.info("roomIds: {}" , roomIds);
 
             // 추출된 각 채팅방 ID에 해당하는 채팅방 정보 조회
             for (String roomId : roomIds) {
-                log.info(">>>>>>>>>>>>>>>>>>>>>> 3");
                 ChatRoomDto room = chatRoomsMap.get(roomId);
                 log.info("ChatRoomDto room = chatRoomsMap.get(roomId) {}", room);
                 if (room != null) {
-                    log.info(">>>>>>>>>>>>>>>>>>>>>> 4");
                     filterdRoomList.add(room); // 채팅방 정보가 있으면 리스트에 추가
                 } // if
             } // for
 
-            log.info("chatRoomsMap: {}",chatRoomsMap);
+//            log.info("chatRoomsMap: {}",chatRoomsMap);
             log.info("chatRoomsMap.size(): {}",chatRoomsMap.size());
 
         } // try
 
-        log.info("filterdRoomList: {}", filterdRoomList);
+//        log.info("filterdRoomList: {}", filterdRoomList);
         log.info("filterdRoomList.size(): {}", filterdRoomList.size());
         return filterdRoomList; // 필터링된 채팅방 목록 반환
     } // findChatRoomByEmail()
@@ -194,25 +190,29 @@ public class ChatService {
         return chatRoomsMap.get(roomId);
     } // findChatRoomById()
 
+
+    // 채팅 내역 찾기
     public List<ChatDto> findChatRoomLogs(String roomId) throws IOException {
         List<ChatDto> chatLogs = new ArrayList<>();
-
         File folder = new File(BASE_PATH);
-
         File[] listOfFiles = folder.listFiles();
 
         // 해당 roomId를 포함하는 파일 찾기
         for (File file : listOfFiles) {
             if (file.isFile() && file.getName().startsWith(roomId)) {
+                AtomicInteger lineNumber = new AtomicInteger(); // Line number counter
                 try (Stream<String> lines = Files.lines(file.toPath())) {
                     lines.forEach(line -> {
-                        try {
-                            ChatDto chatLog = objectMapper.readValue(line, ChatDto.class);
-                            chatLogs.add(chatLog);
-                        } catch (IOException e) {
-                            log.error("Error occurred in findChatRoomLogs() while parsing chat log: ", e);
-                        } // try-catch
-                    }); // forEach
+                        lineNumber.getAndIncrement(); // Increment line number for each line
+                        if (lineNumber.get() > 1) { // Skip the first line
+                            try {
+                                ChatDto chatLog = objectMapper.readValue(line, ChatDto.class);
+                                chatLogs.add(chatLog);
+                            } catch (IOException e) {
+                                log.error("Error occurred in findChatRoomLogs() while parsing chat log: ", e);
+                            }
+                        }
+                    });
                 } // try
                 break; // roomId에 해당하는 파일을 찾으면 반복 중지
             } // if
@@ -220,6 +220,7 @@ public class ChatService {
 
         return chatLogs;
     } // findChatRoomLogs()
+
 
     /* ------------------------------------------------------------------------------------ */
 
@@ -263,6 +264,11 @@ public class ChatService {
     public void saveChatToText(ChatDto chatDto) throws IOException {
         // findChatFileName 메소드를 사용하여 파일 이름을 조회
         String filename = findChatFileName(chatDto.getRoomId(), chatDto.getSender());
+        // 현재 시간을 "yyyy-MM-dd HH:mm:ss" 포맷으로 설정
+        String formattedSendDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        chatDto.setSendDate(formattedSendDate);
+        log.info(">>>>>>>>>>>>> "+chatDto.getSendDate());
+
         if (filename == null) {
             return;
         }
@@ -327,12 +333,10 @@ public class ChatService {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
                 writer.write(objectMapper.writeValueAsString(chatRoomDto));
                 writer.newLine(); // 줄바꿈
-                writer.write("=================================================\n"); // 구분선
             }
         } catch (IOException e) {
             log.error("Error writing new chat room to file: {}", e.getMessage());
         }
     }
-
 
 } // end class

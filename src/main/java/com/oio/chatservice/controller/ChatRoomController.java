@@ -53,7 +53,7 @@ public class ChatRoomController {
         chatRoomDto.setReceiver(receiver);
         chatRoomDto.setSender(sender);
 
-        log.info("생성 요청된 채팅방 정보: {}", chatRoomDto);
+//        log.info("생성 요청된 채팅방 정보: {}", chatRoomDto);
         return chatService.createChatRoom(chatRoomDto);
 
     }
@@ -114,7 +114,7 @@ public class ChatRoomController {
     @ResponseBody
     public List<ChatDto> enterChatRoom(@PathVariable String roomId) throws IOException {
         log.info(">>>>>>>>>>>>>>>>> enterChatRoom() invoked");
-        log.info("chatService.findChatRoomLogs(roomId): {}", chatService.findChatRoomLogs(roomId));
+//        log.info("chatService.findChatRoomLogs(roomId): {}", chatService.findChatRoomLogs(roomId));
 
         return chatService.findChatRoomLogs(roomId);
 
