@@ -15,8 +15,8 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/chat")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
-//@CrossOrigin(origins = "*", allowedHeaders = "*", methods = RequestMethod.GET)
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST})
 public class ChatRoomController {
 
     private final ChatService chatService;
