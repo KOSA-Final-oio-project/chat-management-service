@@ -5,6 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
+import org.springframework.web.socket.server.standard.TomcatRequestUpgradeStrategy;
+import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
 
 @Slf4j
@@ -29,8 +33,10 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         // registerStompEndpoints(): 클라이언트가 WebSocket 연결을 시작할 수 있는 엔드포인트를 정의
 
         // 개발 서버 접속 주소 = ws://~/ws-stomp
-        registry.addEndpoint("/ws-stomp")
+        registry.addEndpoint("/ws-stomp/**")
                 .setAllowedOriginPatterns("*")
+//                .setAllowedOrigins("*")
+//                .setAllowedOrigins("http://loclahost:5173")
                 .withSockJS();
         // withSockJS() = 클라이언트가 WebSocket을 지원하지 않을 경우 대체 옵션으로 SockJS를 사용
         // => SockJS는 WebSocket과 유사한 객체를 제공하는 브라우저 JavaScript 라이브러리
