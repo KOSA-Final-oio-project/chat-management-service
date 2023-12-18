@@ -84,6 +84,7 @@ public class ChatService {
      */
     private ChatRoomDto createChatRoomDto(String roomId, File file) {
         ChatRoomDto chatRoom = new ChatRoomDto();
+
         chatRoom.setRoomId(roomId);
 
         // 파일 이름을 "_" 기준으로 분할
@@ -101,7 +102,6 @@ public class ChatService {
             chatRoom.setCreateDate(createDate);
             chatRoom.setSender(sender);
             chatRoom.setReceiver(receiver);
-            // 추가로 필요한 정보가 있다면 여기에 설정
         }
 
         log.info(" chatRoom: {} ", chatRoom);
@@ -299,6 +299,7 @@ public class ChatService {
                 chatRoomDto.getRoomName(),
                 chatRoomDto.getProductName(),
                 chatRoomDto.getProductPrice(),
+                chatRoomDto.getProductStatus(),
                 chatRoomDto.getReceiver(),
                 chatRoomDto.getSender()
         );

@@ -15,49 +15,47 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/chat")
-//@CrossOrigin(origins = "http://localhost:5173")
-@CrossOrigin(origins = "*", allowedHeaders = "*") // 모든 오리진과 헤더를 허용
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*", methods = RequestMethod.GET)
 public class ChatRoomController {
 
     private final ChatService chatService;
 
     /* ------------------------------------------------------------------------------------ */
 
-    /**
-     * 채팅방 생성
-     * @param roomName
-     * @param createDate
-     * @param productName
-     * @param productPrice
-     * @param receiver
-     * @param sender
-     * @return 생성된 채팅방 정보
-     */
-    @PostMapping("/room/{roomName}/{createDate}/{productName}/{productPrice}/{receiver}/{sender}")
+//    @PostMapping("/room/{roomName}/{createDate}/{productName}/{productPrice}/{receiver}/{sender}")
+//    @ResponseBody
+//    public ChatRoomDto createChatRoom(
+//            @PathVariable String roomName,
+//            @PathVariable String createDate,
+//            @PathVariable String productName,
+//            @PathVariable String productPrice,
+//            @PathVariable String receiver,
+//            @PathVariable String sender) {
+//
+//        // ChatRoomDto 객체 생성
+//        ChatRoomDto chatRoomDto = new ChatRoomDto();
+//        chatRoomDto.setRoomId(UUID.randomUUID().toString());
+//        chatRoomDto.setRoomName(roomName);
+//        chatRoomDto.setCreateDate(createDate); // 또는 서버 시간 사용
+//        chatRoomDto.setProductName(productName);
+//        chatRoomDto.setProductPrice(productPrice);
+//        chatRoomDto.setReceiver(receiver);
+//        chatRoomDto.setSender(sender);
+//
+////        log.info("생성 요청된 채팅방 정보: {}", chatRoomDto);
+//        return chatService.createChatRoom(chatRoomDto);
+//
+//    }
+
+    @PostMapping("/room")
     @ResponseBody
-    public ChatRoomDto createChatRoom(
-            @PathVariable String roomName,
-            @PathVariable String createDate,
-            @PathVariable String productName,
-            @PathVariable String productPrice,
-            @PathVariable String receiver,
-            @PathVariable String sender) {
+    public ChatRoomDto createChatRoom ( ChatRoomDto chatRoomDto ) {
 
-        // ChatRoomDto 객체 생성
-        ChatRoomDto chatRoomDto = new ChatRoomDto();
         chatRoomDto.setRoomId(UUID.randomUUID().toString());
-        chatRoomDto.setRoomName(roomName);
-        chatRoomDto.setCreateDate(createDate); // 또는 서버 시간 사용
-        chatRoomDto.setProductName(productName);
-        chatRoomDto.setProductPrice(productPrice);
-        chatRoomDto.setReceiver(receiver);
-        chatRoomDto.setSender(sender);
-
-//        log.info("생성 요청된 채팅방 정보: {}", chatRoomDto);
+        log.info("생성 요청된 채팅방 정보: {}", chatRoomDto);
         return chatService.createChatRoom(chatRoomDto);
-
     }
-
     /* ------------------------------------------------------------------------------------ */
 
     /**
