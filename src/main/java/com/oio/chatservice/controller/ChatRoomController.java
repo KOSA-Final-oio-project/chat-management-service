@@ -32,8 +32,8 @@ public class ChatRoomController {
      * @param sender
      * @return 생성된 채팅방 정보
      */
-    @PostMapping("/room/{roomName}/{createDate}/{productName}/{productPrice}/{productStatus}/{receiver}/{sender}")
-//    @PostMapping("/room")
+//    @PostMapping("/room/{roomName}/{createDate}/{productName}/{productPrice}/{productStatus}/{receiver}/{sender}")
+    @PostMapping("/room")
     @ResponseBody
     public ChatRoomDto createChatRoom (
             @PathVariable String roomName,
