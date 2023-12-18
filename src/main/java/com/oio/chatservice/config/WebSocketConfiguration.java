@@ -43,6 +43,6 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         registry.setMessageSizeLimit(160 * 64 * 1024);
         registry.setSendTimeLimit(100 * 10000);
         registry.setSendBufferSizeLimit(3 * 512 * 1024);
-    }
+    } // configureWebSocketTransport()
 
 } // end class

@@ -19,7 +19,6 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
 public class ChatController {
 
     // 특정 메시지 브로커에 메시지를 보내는 데 사용되는 스프링 서비스임. 특정 토픽에 구독한 클라이언트들에게 메시지를 보내는 것을 관리

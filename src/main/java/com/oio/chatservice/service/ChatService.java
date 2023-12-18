@@ -65,7 +65,7 @@ public class ChatService {
                                 ChatRoomDto chatRoom = createChatRoomDto(roomId, file);
                                 chatRoomsMap.put(chatRoom.getRoomId(), chatRoom); // chatRoomsMap에 추가
                                 log.info("chatRoomsMap: {}", chatRoomsMap);
-                                break; // 일치하는 이메일을 찾았으므로 더 이상 검사하지 않음
+                                break; // 일치하는 이메일을 찾음 -> 더 이상 검사 X
                             }
                         }
                     }
@@ -299,6 +299,7 @@ public class ChatService {
                 chatRoomDto.getRoomName(),
                 chatRoomDto.getProductName(),
                 chatRoomDto.getProductPrice(),
+                chatRoomDto.getProductStatus(),
                 chatRoomDto.getReceiver(),
                 chatRoomDto.getSender()
         );

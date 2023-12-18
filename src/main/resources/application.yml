@@ -6,11 +6,11 @@ spring:
   application:
     name: chat-service
 
-#  devtools:
-#    livereload:
-#      enabled: true
-#    restart:
-#      enabled: false
+  #  devtools:
+  #    livereload:
+  #      enabled: true
+  #    restart:
+  #      enabled: false
 
   freemarker:
     cache: false
