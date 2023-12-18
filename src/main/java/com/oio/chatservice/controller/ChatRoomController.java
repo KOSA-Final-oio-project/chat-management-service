@@ -14,7 +14,9 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/chat") // 모든 오리진과 헤더를 허용
+@RequestMapping("/chat")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*", methods = RequestMethod.GET)
 public class ChatRoomController {
 
     private final ChatService chatService;
@@ -23,45 +25,18 @@ public class ChatRoomController {
 
     /**
      * 채팅방 생성
-     * @param roomName
-     * @param createDate
-     * @param productName
-     * @param productPrice
-     * @param productStatus
-     * @param receiver
-     * @param sender
-     * @return 생성된 채팅방 정보
+     * @param chatRoomDto
+     * @return 채팅방 정보
      */
-//    @PostMapping("/room/{roomName}/{createDate}/{productName}/{productPrice}/{productStatus}/{receiver}/{sender}")
+
     @PostMapping("/room")
     @ResponseBody
-    public ChatRoomDto createChatRoom (
-            @PathVariable String roomName,
-            @PathVariable String createDate,
-            @PathVariable String productName,
-            @PathVariable String productPrice,
-            @PathVariable String productStatus,
-            @PathVariable String receiver,
-            @PathVariable String sender) {
-//            @RequestBody ChatRoomDto chatRoomDto) {
+    public ChatRoomDto createChatRoom ( ChatRoomDto chatRoomDto ) {
 
-        // ChatRoomDto 객체 생성
-        ChatRoomDto chatRoomDto = new ChatRoomDto();
         chatRoomDto.setRoomId(UUID.randomUUID().toString());
-        chatRoomDto.setRoomName(roomName);
-        chatRoomDto.setCreateDate(createDate); // 또는 서버 시간 사용
-        chatRoomDto.setProductName(productName);
-        chatRoomDto.setProductPrice(productPrice);
-        chatRoomDto.setProductStatus(productStatus);
-        chatRoomDto.setReceiver(receiver);
-        chatRoomDto.setSender(sender);
-//
-
-//        log.info("생성 요청된 채팅방 정보: {}", chatRoomDto);
+        log.info("생성 요청된 채팅방 정보: {}", chatRoomDto);
         return chatService.createChatRoom(chatRoomDto);
-
     }
-
     /* ------------------------------------------------------------------------------------ */
 
     /**

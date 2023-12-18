@@ -68,9 +68,10 @@ public class ChatRoomDto {
 
     /**
      * 방 생성
-     * @param name 채팅방 이름
+     * @param roomName 채팅방 이름
      * @param productName 제품 이름
      * @param productPrice 제품 가격
+     * @param productStatus 대여 상태
      * @param receiver 수신자 이메일
      * @param sender 발신자 이메일
      * @return 생성된 채팅방 정보
