@@ -15,7 +15,6 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/chat")
-//@CrossOrigin(origins = "*", allowedHeaders = "*")
 @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST})
 public class ChatRoomController {
 
@@ -28,10 +27,9 @@ public class ChatRoomController {
      * @param chatRoomDto
      * @return 채팅방 정보
      */
-
     @PostMapping("/room")
     @ResponseBody
-    public ChatRoomDto createChatRoom ( ChatRoomDto chatRoomDto ) {
+    public ChatRoomDto createChatRoom (ChatRoomDto chatRoomDto) {
 
         chatRoomDto.setRoomId(UUID.randomUUID().toString());
         log.info("생성 요청된 채팅방 정보: {}", chatRoomDto);
@@ -54,20 +52,33 @@ public class ChatRoomController {
     /* ------------------------------------------------------------------------------------ */
 
     /**
-     * email에 해당하는 채팅방 목록 반환
+     * nickname에 해당하는 채팅방 목록 반환
      * @return 채팅방 목록 데이터
      */
-    @GetMapping("/rooms/{email}")
+    @GetMapping("/rooms/{nickname}")
     @ResponseBody
-    public List<ChatRoomDto> chatRoomByEmail(@PathVariable String email) throws IOException {
-        log.info(">>>>>>>>>>>>>>>>> chatRoomByEmail() invoked");
-        log.info(">>>>>>>>>>>>>>>>> 전달받은 email: " + email);
+    public List<ChatRoomDto> chatRoomByNickname(@PathVariable String nickname) throws IOException {
+        log.info(">>>>>>>>>>>>>>>>> chatRoomByNickname() invoked");
+        log.info(">>>>>>>>>>>>>>>>> 전달받은 nickname: " + nickname);
 
-        chatService.loadChatRooms(email); // 사용자별 채팅방 목록 로드
-//        chatService.loadChatRooms(); // 사용자별 채팅방 목록 로드
+        chatService.loadChatRooms(nickname); // 사용자별 채팅방 목록 로드
+        return chatService.findChatRoomByNickname(nickname);
+    } // chatRoomByNickname()
 
-        return chatService.findChatRoomByEmail(email);
-    } // chatRoom()
+    /**
+     * 채팅 내역 첫 줄 반환
+     * @param roomId
+     * @return
+     * @throws IOException
+     */
+    @GetMapping("/roominfo/{roomId}")
+    @ResponseBody
+    public ChatRoomDto chatRoomInfoByRoomId(@PathVariable String roomId) throws IOException {
+        log.info(">>>>>>>>>>>>>>>>> chatRoomInfoByRoomId() invoked");
+        log.info(">>>>>>>>>>>>>>>>> 전달받은 roomId: " + roomId);
+        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {}", chatService.findInfoByRoomId(roomId));
+        return chatService.findInfoByRoomId(roomId);
+    } // chatRoomInfoByRoomId()
 
     /**
      * 특정 채팅방 조회
@@ -93,10 +104,8 @@ public class ChatRoomController {
     @ResponseBody
     public List<ChatDto> enterChatRoom(@PathVariable String roomId) throws IOException {
         log.info(">>>>>>>>>>>>>>>>> enterChatRoom() invoked");
-//        log.info("chatService.findChatRoomLogs(roomId): {}", chatService.findChatRoomLogs(roomId));
 
         return chatService.findChatRoomLogs(roomId);
-
     } // enterChatRoom()
 
 } // end class

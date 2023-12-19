@@ -46,7 +46,7 @@ public class ChatController {
         } else if (ChatDto.MessageType.TALK.equals(chatDto.getMessageType())) {
             // TALK 메시지의 경우, 추가적인 처리 없이 바로 저장
             chatService.saveChatToText(chatDto); // 채팅 메시지를 파일에 저장
-        }
+        } //if-else
 
         // 날짜 처리
         LocalDateTime sendDate;
@@ -57,17 +57,16 @@ public class ChatController {
             );
         } catch (Exception e) {
             sendDate = LocalDateTime.now();
-        }
+        } // try-catch
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         chatDto.setSendDate(sendDate.format(formatter));
 
         // 메시지 전송
         template.convertAndSend("/sub/chat/room/" + chatDto.getRoomId(), chatDto);
-    }
+    } // message()
 
 } // end class
-
 /**
  *         // convertAndSend
  *         // 지정된 목적지로 메시지를 보내는 데 사용
