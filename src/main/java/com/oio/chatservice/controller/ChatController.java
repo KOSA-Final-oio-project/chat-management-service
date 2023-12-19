@@ -44,9 +44,11 @@ public class ChatController {
             chatDto.setMessage(" ' " + chatDto.getSender() + " '님이 퇴장하셨습니다.");
             chatService.saveChatToText(chatDto); // 채팅 메시지를 파일에 저장
         } else if (ChatDto.MessageType.TALK.equals(chatDto.getMessageType())) {
-            // TALK 메시지의 경우, 추가적인 처리 없이 바로 저장
             chatService.saveChatToText(chatDto); // 채팅 메시지를 파일에 저장
-        } //if-else
+        } else if (ChatDto.MessageType.ALERT.equals(chatDto.getMessageType())) {
+            chatDto.setMessage("거래가 시작되었습니다. 거래 기간은 " + chatDto.getRentStartDate() + " ~ "  + chatDto.getRentEndDate() + "입니다.");
+            chatService.saveChatToText(chatDto); // 채팅 메시지를 파일에 저장
+        }
 
         // 날짜 처리
         LocalDateTime sendDate;

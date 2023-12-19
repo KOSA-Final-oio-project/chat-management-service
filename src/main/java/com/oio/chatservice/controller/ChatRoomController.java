@@ -1,10 +1,12 @@
 package com.oio.chatservice.controller;
 
+import com.oio.chatservice.dto.ChatDeleteDto;
 import com.oio.chatservice.dto.ChatDto;
 import com.oio.chatservice.dto.ChatRoomDto;
 import com.oio.chatservice.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -66,7 +68,7 @@ public class ChatRoomController {
     } // chatRoomByNickname()
 
     /**
-     * 채팅 내역 첫 줄 반환
+     * roomId로 채팅 내역 조회 후 첫 줄 반환
      * @param roomId
      * @return
      * @throws IOException
@@ -77,6 +79,7 @@ public class ChatRoomController {
         log.info(">>>>>>>>>>>>>>>>> chatRoomInfoByRoomId() invoked");
         log.info(">>>>>>>>>>>>>>>>> 전달받은 roomId: " + roomId);
         log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {}", chatService.findInfoByRoomId(roomId));
+
         return chatService.findInfoByRoomId(roomId);
     } // chatRoomInfoByRoomId()
 

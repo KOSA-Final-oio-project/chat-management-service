@@ -33,13 +33,8 @@ public class ChatDto {
     private String productStatus;
     private String receiver;
     private String createDate;
-
-    // 새로운 채팅 왔을 경우 (웹소켓 끊긴 경우 QUIT 메시지 반환 -> 이후의 메시지는 다 isRead false 처리)
-    private int readCnt;
-
-    // 채팅 삭제했을 경우 안보이게 처리
-    private boolean isVisibleToSender1; // 빌리는 사람
-    private boolean isVisibleToSender2; // 빌려주는 사람
+    private String rentStartDate;
+    private String rentEndDate;
 
     /* =============================== */
 
