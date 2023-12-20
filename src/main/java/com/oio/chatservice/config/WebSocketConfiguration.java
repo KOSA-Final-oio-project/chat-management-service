@@ -30,9 +30,9 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
         // 개발 서버 접속 주소 = ws://~/ws-stomp
         registry.addEndpoint("/ws-stomp")
-                .setAllowedOriginPatterns("*")
+//                .setAllowedOriginPatterns("*")
 //                .setAllowedOrigins("*")
-//                .setAllowedOrigins("http://loclahost:5173")
+                .setAllowedOrigins("http://192.168.1.86:5173")
                 .withSockJS();
         // withSockJS() = 클라이언트가 WebSocket을 지원하지 않을 경우 대체 옵션으로 SockJS를 사용
         // => SockJS는 WebSocket과 유사한 객체를 제공하는 브라우저 JavaScript 라이브러리

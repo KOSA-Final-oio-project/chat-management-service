@@ -1,50 +1,50 @@
-server:
-  port: 0
-
-spring:
-
-  application:
-    name: chat-service
-
-  #  devtools:
-  #    livereload:
-  #      enabled: true
-  #    restart:
-  #      enabled: false
-
-  freemarker:
-    cache: false
-
-  kafka:
-    bootstrap-servers: localhost:9092  # Kafka 서버 주소
-    consumer:
-      group-id: chat-group  # Kafka 컨슈머 그룹 ID
-      auto-offset-reset: earliest
-    producer:
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-    listener:
-      missing-topics-fatal: false
-
-  # listener.missing-topics-fatal:
-  # 이 속성을 false로 설정하면, 지정한 토픽이 없을 경우 애플리케이션이 시작되지 않는 것을 방지
-
-eureka:
-  instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-
-cloud:
-  aws:
-    region:
-      static: ap-northeast-2
-    s3:
-      bucket: oio-bucket
-    stack:
-      auto: false
-    credentials:
-      secret-key: lyv1EWFNd9j0+KKfZ3yH9LgCCy160EzZhLq5Mk25
-      access-key: AKIAYH2KJWQOIK7U6OOV
+#server:
+#  port: 0
+#
+#spring:
+#
+#  application:
+#    name: chat-service
+#
+#  #  devtools:
+#  #    livereload:
+#  #      enabled: true
+#  #    restart:
+#  #      enabled: false
+#
+#  freemarker:
+#    cache: false
+#
+#  kafka:
+#    bootstrap-servers: localhost:9092  # Kafka 서버 주소
+#    consumer:
+#      group-id: chat-group  # Kafka 컨슈머 그룹 ID
+#      auto-offset-reset: earliest
+#    producer:
+#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+#    listener:
+#      missing-topics-fatal: false
+#
+#  # listener.missing-topics-fatal:
+#  # 이 속성을 false로 설정하면, 지정한 토픽이 없을 경우 애플리케이션이 시작되지 않는 것을 방지
+#
+#eureka:
+#  instance:
+#    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
+#
+#cloud:
+#  aws:
+#    region:
+#      static: ap-northeast-2
+#    s3:
+#      bucket: oio-bucket
+#    stack:
+#      auto: false
+#    credentials:
+#      secret-key: lyv1EWFNd9j0+KKfZ3yH9LgCCy160EzZhLq5Mk25
+#      access-key: AKIAYH2KJWQOIK7U6OOV
