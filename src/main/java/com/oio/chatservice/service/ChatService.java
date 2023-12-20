@@ -337,6 +337,7 @@ public class ChatService {
         // 채팅방 생성
         ChatRoomDto newChatRoom = ChatRoomDto.createChatRoom(
                 chatRoomDto.getRoomName(),
+                chatRoomDto.getProductNo(),
                 chatRoomDto.getProductName(),
                 chatRoomDto.getProductPrice(),
                 chatRoomDto.getReceiver(),

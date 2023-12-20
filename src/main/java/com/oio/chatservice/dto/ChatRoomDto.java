@@ -61,6 +61,7 @@ public class ChatRoomDto {
     private String roomName;
     private String createDate;
     private String sender;
+    private String productNo;
     private String productName;
     private String productPrice;
     private String receiver;
@@ -75,11 +76,12 @@ public class ChatRoomDto {
      * @param receiver 수신자 닉네임
      * @return 생성된 채팅방 정보
      */
-    public static ChatRoomDto createChatRoom(String roomName, String productName, String productPrice, String sender, String receiver) {
+    public static ChatRoomDto createChatRoom(String roomName, String productNo, String productName, String productPrice, String sender, String receiver) {
         ChatRoomDto chatRoomDto = new ChatRoomDto();
 
         chatRoomDto.roomId = UUID.randomUUID().toString();
         chatRoomDto.roomName = roomName;
+        chatRoomDto.productNo = productNo;
         chatRoomDto.productName = productName;
         chatRoomDto.productPrice = productPrice;
         chatRoomDto.receiver = receiver;
