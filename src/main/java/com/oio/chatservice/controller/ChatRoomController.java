@@ -32,6 +32,8 @@ public class ChatRoomController {
     public ChatRoomDto createChatRoom (ChatRoomDto chatRoomDto) {
 
         chatRoomDto.setRoomId(UUID.randomUUID().toString());
+        chatRoomDto.setSender(chatRoomDto.getSender());
+        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {}",chatRoomDto.getSender());
         log.info("생성 요청된 채팅방 정보: {}", chatRoomDto);
         return chatService.createChatRoom(chatRoomDto);
     }

@@ -334,14 +334,17 @@ public class ChatService {
 
     // 방 생성하자마자 파일로 저장
     public ChatRoomDto createChatRoom(ChatRoomDto chatRoomDto) {
+
+        log.info("&&&&&&&&&&&&&&&&&&&&&&&&&&& {}",chatRoomDto);
+
         // 채팅방 생성
         ChatRoomDto newChatRoom = ChatRoomDto.createChatRoom(
                 chatRoomDto.getRoomName(),
                 chatRoomDto.getProductNo(),
                 chatRoomDto.getProductName(),
                 chatRoomDto.getProductPrice(),
-                chatRoomDto.getReceiver(),
-                chatRoomDto.getSender()
+                chatRoomDto.getSender(),
+                chatRoomDto.getReceiver()
         );
 
         // 파일 이름 생성 (roomId_roomName_createDate_sender_receiver.txt)

@@ -79,6 +79,8 @@ public class ChatRoomDto {
     public static ChatRoomDto createChatRoom(String roomName, String productNo, String productName, String productPrice, String sender, String receiver) {
         ChatRoomDto chatRoomDto = new ChatRoomDto();
 
+        log.info(sender);
+
         chatRoomDto.roomId = UUID.randomUUID().toString();
         chatRoomDto.roomName = roomName;
         chatRoomDto.productNo = productNo;
