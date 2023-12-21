@@ -41,7 +41,6 @@ public class ChatService {
 
     /* ------------------------------------------------------------------------------------ */
 
-
     /**
      * 채팅방 로드시키는 메소드
      * @param email 사용자가 참여한 채팅방을 찾기 위해 사용함
@@ -68,19 +67,20 @@ public class ChatService {
                         String fileNameWithoutExtension = file.getName().substring(0, file.getName().length() - 4); // 파일 이름에서 ".txt" 확장자 제거
                         String[] parts = fileNameWithoutExtension.split("_");  // 파일 이름을 '_' 기준으로 분할
 
+                        log.info(">>>>>>>>>>> {}", Arrays.toString(parts));
+
                         // 파일 이름의 각 부분을 검사하여 사용자 이메일과 일치하는지 확인
+                        // parts[3] 이랑 parts[4] 비교
                         for (String part : parts) {
 
                             // 4. 파일 이름의 일부가 사용자 이메일과 일치하는 경우
-                            if (part.equals(nickname)) {
-                                String roomId = parts[0]; // roomId 추출해서 사용함
-                                ChatRoomDto chatRoom = createChatRoomDto(roomId, file); // roomId와 file 기반으로 ChatRoomDto 객체를 생성
-                                chatRoomsMap.put(chatRoom.getRoomId(), chatRoom); // chatRoomsMap에 추가
-
-                                log.info("chatRoomsMap: {}", chatRoomsMap);
-
-                                break; // 일치하는 이메일을 찾음 -> 더 이상 검사 X
+                            if (parts.length >= 5 &&
+                                    (parts[3].equals(nickname) || parts[4].equals(nickname))) {
+                                String roomId = parts[0];
+                                ChatRoomDto chatRoom = createChatRoomDto(roomId, file);
+                                chatRoomsMap.put(chatRoom.getRoomId(), chatRoom);
                             } // if
+
                         } // for
                     } // if
                 } // for
@@ -138,8 +138,8 @@ public class ChatService {
     } // findAllChatRoom()
 
     /**
-     * 이메일로 채팅방 찾기
-     * @param email
+     * 닉네임으로 채팅방 찾기
+     * @param nickname
      * @return
      * @throws IOException
      */
