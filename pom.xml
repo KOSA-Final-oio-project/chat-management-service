@@ -64,7 +64,7 @@
 
 		<!-- jpa -->
 <!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<groupId>org.springframework.booFt</groupId>-->
 <!--			<artifactId>spring-boot-starter-data-jpa</artifactId>-->
 <!--		</dependency>-->
 
@@ -73,6 +73,15 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
+
 		<!-- eureka-client -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -132,6 +141,13 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>stomp-websocket</artifactId>
 			<version>2.3.3-1</version>
+		</dependency>
+
+		<!-- amazon s3 -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>1.12.595</version>
 		</dependency>
 
 		<!-- security -->
